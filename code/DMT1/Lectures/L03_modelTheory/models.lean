@@ -2,13 +2,18 @@
 
 # Models
 
+
+
 As a final chapter in our unit on propositional logic, we
 now present the concepts of models and counter-examples.
+
+<!-- toc -->
+
 @@@ -/
 
 import DMT1.Lectures.L03_modelTheory.truthTable
 
-namespace DMT1.lecture.propLogic.semantics.models
+namespace DMT1.Lectures.propLogic.semantics.models
 open propLogic.syntax
 
 /- @@@
@@ -61,4 +66,4 @@ def findModel :  Expr → Option Interp
   | [] => none
   | h::_ => h
 
-end DMT1.lecture.propLogic.semantics.models
+end  DMT1.Lectures.propLogic.semantics.models

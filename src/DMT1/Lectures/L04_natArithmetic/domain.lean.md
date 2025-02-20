@@ -2,10 +2,13 @@
 import Mathlib.Data.Set.Basic
 import Mathlib.Logic.Relation
 
-namespace DMT1.Lectures.L04_natArithmetic.domain
+namespace DMT1.Lectures.natArithmetic.domain
 ```
 
 # Domain: natural number arithmetic
+
+<!-- toc -->
+
 
 ## The Nat Type
 
@@ -318,5 +321,5 @@ no longer be able to compute whether a given object
 all inputs), but will instead have to construct a
 proof of that proposition for any given program.
 ```lean
-end DMT1.Lectures.L04_natArithmetic.domain
+end DMT1.Lectures.natArithmetic.domain
 ```

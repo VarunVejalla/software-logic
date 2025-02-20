@@ -23,7 +23,7 @@ and then do a case analysis, returning one result if the
 constructor of the value was true, and andother if it was
 false.
 -/
-namespace DMT1.lecture.propLogic.semantics.domain
+namespace DMT1.Lectures.propLogic.semantics.domain
 
 #eval match false with | true => "T" | false => "F"
 #eval match true  with | true => "T" | false => "F"
@@ -97,4 +97,4 @@ def iff : Bool → Bool → Bool
 -- Problem #1 (combinatorics): How many binary Boolean functions are there?
 -- Problem #2 (Boolean algenra): Write a specification of the exclusive or function (xor)
 
-end DMT1.lecture.propLogic.semantics.domain
+end DMT1.Lectures.propLogic.semantics.domain

@@ -6,8 +6,10 @@
 import DMT1.Lectures.L02_propLogic.formal.utilities
 import DMT1.Lectures.L02_propLogic.formal.semantics
 
-namespace DMT1.lecture.propLogic.semantics
+namespace DMT1.Lectures.propLogic.semantics
+
 open propLogic.syntax
+open propLogic.utilities
 ```
 
 An interpretation, *i*, in predicate logic is a function
@@ -365,5 +367,5 @@ As a final note, if you improve this module's
 implementation, please send me a pull request!
 
 ```lean
-end DMT1.lecture.propLogic.semantics
+end DMT1.Lectures.propLogic.semantics
 ```

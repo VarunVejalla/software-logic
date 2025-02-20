@@ -6,7 +6,7 @@ syntax propositional logic.
 <!-- toc -->
 
 ```lean
-namespace DMT1.lecture.propLogic.syntax
+namespace DMT1.Lectures.propLogic.syntax
 ```
 
 
@@ -245,5 +245,5 @@ interpretations of these variables as unvaryingly either
 true or false.
 
 ```lean
-end DMT1.lecture.propLogic.syntax
+end DMT1.Lectures.propLogic.syntax
 ```

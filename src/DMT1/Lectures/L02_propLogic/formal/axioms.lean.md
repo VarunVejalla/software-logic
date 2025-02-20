@@ -15,8 +15,10 @@ able to use them here without prefixes.
 ```lean
 import DMT1.Lectures.L02_propLogic.formal.syntax
 
-namespace DMT1.lecture.propLogic.axioms
+namespace DMT1.Lectures.propLogic.axioms
+
 open propLogic.syntax
+
 open Expr
 ```
 
@@ -88,5 +90,5 @@ as good examples of expressions we can write now using
 the syntax we've defined.
 
 ```lean
-end DMT1.lecture.propLogic.axioms
+end DMT1.Lectures.propLogic.axioms
 ```

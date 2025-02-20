@@ -8,6 +8,9 @@ and returns another natural number value, it's type
 must be *Nat → Nat*. But can we compute the value of
 the function for *any* n?
 
+<!-- toc -->
+
+
 ## A Manual Approach
 
 First, we could fill in a table of function values
@@ -372,7 +375,7 @@ def baseSq : Nat := 0
 -- step up answer machine
 -- from n' and sumSq n' return (n' + 1)^2 + sumSq n'
 def stepSq : Nat → Nat → Nat
-| n', sum_sq_n' => _
+| n', sum_sq_n' => sorry
 
 -- here's how the stepping up works
 #eval stepSq 0 0  -- return answer for n = 1; expect 1
@@ -499,7 +502,7 @@ def binaryRep : Nat → String
 | 0 => "0"
 | 1 => "1"
 | n' + 2 => let n := n' + 2
-            _ ++ toString (n % 2)
+            sorry ++ toString (n % 2)
 
 -- Complete the definition. The tests will work,.
 #eval binaryRep 0   --expect "0"
@@ -587,9 +590,9 @@ third case for the indutive construction, for any n = (n' + 2).
 
 ```lean
 def fib : Nat → Nat
-| 0 => _
-| 1 => _
-| n' + 2 => _
+| 0 => sorry
+| 1 => sorry
+| n' + 2 => sorry
 ```
 
 Write test cases for 0, 1, 2, and 10. Does it work?

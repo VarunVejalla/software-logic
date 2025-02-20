@@ -27,3 +27,7 @@ import DMT1.Lectures.L03_modelTheory.validity
 import DMT1.Lectures.L04_natArithmetic.syntax
 import DMT1.Lectures.L04_natArithmetic.semantics
 import DMT1.Lectures.L04_natArithmetic.domain
+
+import DMT1.Lectures.L05_theoryExtensions.syntax
+import DMT1.Lectures.L05_theoryExtensions.semantics
+import DMT1.Lectures.L05_theoryExtensions.domain

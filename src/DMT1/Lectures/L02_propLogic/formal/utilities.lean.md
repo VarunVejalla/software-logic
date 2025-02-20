@@ -3,7 +3,7 @@
 #### Low-level bit vector routines
 -/
 
-namespace DMT1.lecture.propLogic
+namespace DMT1.Lectures.propLogic.utilities
 
 /-!
 Converting natural number indices to corresponding rows of
@@ -81,5 +81,5 @@ where foo : List Bool → Nat → Option Nat
           /-search rest-/
           foo bs len
 
-end DMT1.lecture.propLogic
+end DMT1.Lectures.propLogic.utilities
 ```
