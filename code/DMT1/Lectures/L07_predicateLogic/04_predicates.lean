@@ -1,3 +1,4 @@
+/- @@@
 # Predicates
 
 <!-- toc -->
@@ -23,11 +24,13 @@ As we see here, *generalizing* over all *people* let's us say
 in just one place what forms of evidence we're willing to take
 for *any* person in just one place. Note that here and from now
 on will will represent logical, or reasoning, types in Prop.
+@@@ -/
 
+/- @@@
 First, though, the mapping of related propositions to entirely
 separate types:
+@@@ -/
 
-```lean
 -- Specialized Proposition: Carter is from Charlottesville
 inductive KevinIsFromCville : Prop where
 | cvilleBirthCert
@@ -39,20 +42,19 @@ inductive CarterIsFromCville : Prop where
 | cvilleBirthCert
 | cvilleDriversLicense
 | cvilleUtilityBill
-```
 
-### Generalizing by Parameeterization
-
+/- @@@
 And now we can write our *generalized* predicate. We will
 call it IsFromCharlottesville. It will be parameterized by
-a *Person* type, an ordinary data type, that we now define.
-It has three values: Carter, Kevin, and Tammy.
+(generalized over) the possible values of a *Person* type,.
+Here this will be the following ordinary data type. In this
+example, it has just three values: Carter, Kevin, and Tammy.
+@@@ -/
 
-```lean
 inductive Person : Type where | Carter | Kevin | Tammy
 open Person
-```
 
+/- @@@
 Now we're set to define PIsFromCville as a predicaate
 on Person values represented as an inductive type that
 is paramterized by a Person, and that when applied (or
@@ -65,10 +67,10 @@ that the type that results from the application of the
 predicate to a particular person is a type in Prop: it
 represents the *proposition* that that person satisfies
 whatever else the predicate might require.
+@@@ -/
 
 
-```lean
--- Generalization: proosition that <p> is from CVille
+-- Generalization: proposition that <p> is from CVille
 inductive PIsFromCville : Person → Prop where
 | cvilleBirthCert       (p : Person) : PIsFromCville p
 | cvilleDriversLicense  (p : Person) : PIsFromCville p
@@ -79,15 +81,15 @@ open PIsFromCville
 #check PIsFromCville Kevin   -- specialization to particular proposition
 #check PIsFromCville Carter  -- pronounce as "Carter is from Cville"
 -- A predicate gives rise to a family of propositions (how many here?)
-```
 
+/- @@@
 As we'e emphasized before, a predicate is a function
 from arguments to propositions, where propositions are,
 again, represented as *types* in *Prop*.
-```lean
+@@@ -/
 #check PIsFromCville
-```
 
+/- @@@
 ## Proving Propositions Specialized from Predicates
 
 Finally we can now see how to "prove" propositions derived from
@@ -98,17 +100,19 @@ proposition. The following code declares KIFC and CIFC as proofs
 of our two propositions, using the same proof/value constructors
 in both cases, as they're common to *all* specializations of the
 given predicate.
-```lean
+@@@ -/
 def pfKevin : PIsFromCville Kevin := cvilleBirthCert Kevin
 def pfCarter : PIsFromCville Carter := cvilleUtilityBill Carter
-```
 
+/- @@@
 So there! We've now represented a *predicate* in Lean, not
 as a type, per se, but as a function that takes a Person as
 an argument, yields a proposition/type, and provies general
 constructors "introduction rules" for contructing proofs of
 these propositions.
+@@@ -/
 
+/- @@@
 ## The Property of The Evenness of Natural Numbers
 
 As another example, we define a very different flavor of
@@ -125,22 +129,22 @@ that *n* is even. These recursives structures always bottom
 out after some finite number of steps with the proof that 0
 is even. Note that we have Ev taking numbers to propositions
 *in Prop.*
+@@@ -/
 
-```lean
 inductive Ev : Nat → Prop where
 | evZero : Ev 0
 | evPlus2 : (n : Nat) → Ev n → Ev (n + 2)
 
 open Ev
-```
 
+/- @@@
 And here are some proofs of evenness
 - 0 is even
 - 2 is even
 - 4 is even
 - 6 is even (fully expanded)
+@@@ -/
 
-```lean
 def pfZeroEv : Ev 0 := evZero
 def pfTwoEv : Ev 2 := evPlus2 0 pfZeroEv
 def pfFourEv : Ev 4 := evPlus2 2 pfTwoEv
@@ -156,8 +160,8 @@ def pfSixEv : Ev 6 :=
         evZero    -- constant proof that 0 is even
       )
     )
-```
 
+/- @@@
 Why can't we build a proof that 5 is even?
 Well, to do that, we'd need a proof that 3
 is even, and for that, a proof that 1 is even.
@@ -165,10 +169,10 @@ But we have no to construct such a proof. In
 fact, we can even prove that an odd number (we
 might as well just start with 1) is *not* even
 in the sense defined by the *Ev* predicate.
+@@@ -/
 
-```lean
 example : ¬Ev 1 :=
-```
+/- @@@
 Recall: ¬Ev 1 is defined to be (Ev 1 → False).
 To prove ¬Ev 1 we need a function of this type.
 Applied to a proof Ev 1, it return a proof a False.
@@ -179,10 +183,10 @@ the fact that it's true for *all* proofs of Ev 1
 (of which there are none).A  total function from
 an uninhabited type to any other type is trivial.
 Here, it's:
-```lean
+@@@ -/
 fun (h : Ev 1) => nomatch h
-```
 
+/- @@@
 Any proopsition quantified universally over an
 empty set or type is valid, because it's true for
 all values in that set or type, and because there
@@ -206,17 +210,17 @@ see it: *true* is both a left and right identity element
 for logical (truth-functional) *And*. You should check
 your undertsanding by finishing this proof that True *is*
 both a left and a right identity element for *And*.
+@@@ -/
 
-```lean
 theorem leftRightIdentityAndTrue :
-```
+/-@@@
 Note quantification over all propositions. So now we're
 seeing that it makes eminent sense to express ideas at a
 level of generality not expressible in first-order theory.
 But here we have captured exactly the abstraction that we
 want. You can finish the proof here that True really is an
 identity, both left and right, for any proposition.
-```lean
+@@@ -/
 ∀ (P : Prop),
   ((P ∧ True) ↔ P) ∧
   ((True ∧ P) ↔ P)
@@ -227,4 +231,3 @@ fun (p : Prop) =>
       (fun h => h.left)
       (fun h => ⟨ h, True.intro⟩))
     (sorry)
-```

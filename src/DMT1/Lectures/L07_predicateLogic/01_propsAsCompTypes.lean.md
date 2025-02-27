@@ -1,31 +1,27 @@
-# Propositions as Types
+# Propositions as Computing Types
 
 <!-- toc -->
 
-By the term, *computational types*, we mean types of data
-that are designed to support computations on ordinary data.
+In this chapter you'll see how elegantly one can embed a
+higher-order predicate logic into Lean by representing:
 
-The purpose of this chapter is to see that "no new magic" is
-needed to represent propositions as types, with their proofs
-being their values, using ordinary computational types.
+- elementary propositions as ordinary inductive data types
+- *and* and *or* connectives as inductive *type builders*
+- *negation* as the function type from any *P* to *Empty*
+- All and only the values of such types type check as proofs
 
-## Some Fundamental Computational Types
+To prove a proposition, you represent it as a type in the
+way we are about to explain, then you specify a program that
+constructs any value of that type. And that works as a proof.
 
-First, we review a few fundamental types. The first
-three are meant to help the reader see that there are
-types with two values (Bool), one value (Unit), and no
-values at all, Empty. In VSCode you can right click on
-the type names and select *go to definition* to visit
-the definitions of these types in Lean's libraries. You
-know how to read this kind of code now.
+This chapter covers a few fundamental programming concepts:
 
-```lean
-#check Bool
-#check Unit
-#check Empty
-```
+- the polymorphic product and sum types
+- empty (uninabited) types, including *Empty*
+- function types to and from empty types
 
-## Set-Up for Running Example
+
+## Represent Propositions as Types, Specified ...
 
 We can represent elementary propositions, and their truth or
 falsing, by defining types that either do or do not have any
@@ -42,49 +38,45 @@ Lean Detail: The *deriving Repr* annotation simply asks Lean to
 generate code to pretty print values of the given type, e.g., when
 one uses #eval/#reduce to produce a reduced value to be displayed.
 
-## Proofs are Values of "Logical" Types
+## ... So That Values Encode Proofs Down to Axioms
 
-One of the powers of Lean is that it checks proofs for deductive
-correctness. In practice we'll gnerally
-accept taht a proposition is true if there's any proofs of it.
-But with proofs as values, that means that all we have to do is
-have Lean check that we've given it a value of the right type.
+Correspondingly we will define our types so that their values
+represent bona fide proofs of the propositions they represent,
+all the way down to axioms, including the constructors, that we
+take as introduction rules, of the types representing our basic
+propositions: *P, Q, R, N*. We will routinely ask Lean to check
+that a proof term really does encode a correct proof, which it
+does by checking that the *proof term* is a value of the type
+representing the proposition to be proved.
 
-
-We have been doing this fromt the start with *def* in Lean. It
-binds a name/identifier, *p*, to a value of type *P*, here to
-*P.mk.* The point here is that Lean typechecks such bindings.
-When proofs are values, it's Lean's typechecker that assures
-that only correctly constructed values will typecheck as proofs.
-The example construct forces typechecking but without binding a
-name.
+Here are two examples where we ask Lean to confirm that we
+have a good proof term. Here *p* is a name bound to a term,
+*P.mk*, that typechecks as a proof of *P.* The *example*
+construct also forces typechecking without binding a name.
 
 ```lean
 def p : P := P.mk
 example : Q := Q.mk
 ```
 
-Now recall that we've represented the false proposition, N,
-as a type with no proof terms. If we try to prove *N* by
-giving Lean a term to typecheck, we get stuck, because there
-is no such term, as we defined *N* to be an empty type. It's
-good news that we can't prove *N* is true, as we've meant
-from the beginning for it to be false. What we haven't yet
-got is the idea of negation, and that the negation of false
-shold be true.
+We defined the type *N* to be uninhabited to illustrate
+the idea that we represent the falsity of a proposition
+by the uninhabitedness of the type that represents it.
+So if we try to prove *N* we get stuck being unable to
+give term of this type, because there are none.
 ```lean
 def r : N := _    -- No. There's no proof term for it!
 ```
 
-## The Logical Connectives
+## Representing The Logical Connectives
 
 We see how to represent elementary propositions, such
-as *P* and *Q*, and *N*m as types. But what about
-compound propositions such as *P ∧ Q, P ∨ Q, P → Q,*
-or *¬P?* We will now show how the logical connectives
-are embedded in Lean.
+as *P* and *Q*, and *N* as types. But what about building
+larger, compound propositions such as *P ∧ Q, P ∨ Q, P → Q,*
+or *¬P* from the individual smaller ones? We will now show
+how this is done for each of these connectives.
 
-### Representing P ∧ Q as P × Q (Product Types)
+### Represent P ∧ Q as a Product Type P × Q
 
 We will represent the proposition, *P ∧ Q*, as the type,
 *Prod P Q* in Lean. This is the type that represents all
@@ -182,7 +174,7 @@ def andCommutative'' : P × Q → Q × P := λ ⟨ p, q ⟩ => ⟨ q, p ⟩
 ```
 
 
-### Representing Sum P Q (P ⊕ Q) with Or P Q (P ∨ Q)
+### Represent P ∨ Q as a Sum Type P ⊕ Q
 
 As we represented the conjunction of propositions as a
 product type, we will represent a disjunction as what is
@@ -200,14 +192,15 @@ represent disjunctions and their proofs.
 ```
 
 
-`Sum α β`, or `α ⊕ β`, is the disjoint union of types `α` and `β`.
-An element of `α ⊕ β` is either of the form `.inl a` where `a : α`, or `.inr b` where `b : β`.
+Here is the definition of the polymorphic Sum type (type
+builder) in Lean.
 
+
+```lean
 inductive Sum (α : Type u) (β : Type v) where
-  /-- Left injection into the sum type `α ⊕ β`. If `a : α` then `.inl a : α ⊕ β`. -/
   | inl (val : α) : Sum α β
-  /-- Right injection into the sum type `α ⊕ β`. If `b : β` then `.inr b : α ⊕ β`. -/
   | inr (val : β) : Sum α β
+```
 
 ```lean
 -- Proof of *or* by proof of left side
@@ -241,10 +234,7 @@ example : P ⊕ Q → Q ⊕ P
 ```
 
 
-
-
-
-### Implication as Function Type
+### Represent P → Q as the Function Type P → Q
 
 We can now represent a logical implication, *P → Q* as
 the corresponding total function type, *P → Q*, viewing
@@ -256,22 +246,22 @@ if *P* is true, this function can then that so is *Q*,
 
 
 
+### Represent ¬N as The Function Type N → Empty
 
-
-### Negation as Proof of Emptiness
-
-If a proposition, *P*, has any proofs, it must be judged
-as true. So the only way represent a false proposition
-is as a type with no values whatsoever. In this file, *N*
-is a proposition represented as a type with no values. It
-is thus false, in our view.
+If a proposition, *P*, has any proofs, it is judged to
+be true (valid). The way represent a false proposition
+is as a type with no values. Here, *N* is such a type.
+We say *N* is an uninhabited type, and we would just *N*
+to represent a false proposition.
 
 Now comes the fun part: Given that it's false, we would
-expect ¬N to be true. We will represent the propsition,
-¬N, as the function type, *N → Empty*, where *Empty* is
-a standard definition in Lean of a type with no values.
+expect ¬N to be true. So what will we take to represent
+a proof of ¬N? The proximate answer is that we will take
+a proof that *N* is uninhabited to be a proof of *¬N*.
+But what will constitute a proof of uninhabitedness?
+The answer is any function of type, *N → Empty*.
 
-The tricky underpinning of this strategy is that if a
+The idea is that if a
 type, say *N*, has one or more values, then no (total)
 function from *N* to empty can be defined, as there will
 be some value of *N* for which some value of type *Empty*
@@ -304,15 +294,21 @@ notation: max "~"A => neg A
 example : ~N := λ (h : N) => nomatch h
 ```
 
-## Summing Up
+## Example: How And Distributes Over Or
 
 With that, we've embedded most of the propositional
 part of predicate logic into Lean, and are now able
 to write (and even prove) interesting propositions.
 Here's a last example before you set off on your own
-homework. We'll prove P ∧ (Q ∨ R) → P ∧ Q ∨ P ∧ R.
-Notice that we *must* do a case analysis to deal
-the the disjunction.
+homework. We'll prove that *and* distributes over *or*
+in much the same way that multiplication distributes
+over addition in ordinary arithmetic. In partiulcar,
+P ∧ (Q ∨ R) → P ∧ Q ∨ P ∧ R.
+
+Be sure to take time to see not only what's being
+stated, but why it's true. If you have a proof of
+a disjunction, you can do a case analysis and then
+reason about each case separately.
 
 ```lean
 example : P × (Q ⊕ R) → (P × Q ⊕ P × R)
@@ -343,8 +339,7 @@ into our current embedding of predicate logic in Lean
 -- Your answers here
 ```
 
-
-## Extra Credit
+Extra credit:
 
 Not all of the axioms that are valid in propositional
 logic are valid in our embedding of constructive logic
