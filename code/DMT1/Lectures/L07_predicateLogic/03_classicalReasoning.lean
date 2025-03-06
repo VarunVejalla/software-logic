@@ -1,7 +1,10 @@
+/- @@@
 # Proof by Negation and by Contradiction
 
 <!-- toc -->
+@@@-/
 
+/- @@@
 ## Introduction
 We will now look further into reasoning about negations.
 There are two related but fundamentally distinct axioms,
@@ -90,20 +93,22 @@ to derive a proof of *P*. Having a proof that *¬P* is false,
 i.e., of *((P → False) → False)* is not enough to get a proof
 of *P*. Here's how you get stuck if you try to prove that it
 is a valid reasoning principle.
+@@@ -/
 
-```lean
 example (P : Prop) :  (¬¬P) → P :=
 -- assume ¬¬P, defed as ((P → False) → False)
 fun nnp =>
 -- now try to show (return a proof of) P
 _ -- stuck!
 -- you can't prove P from ((P → False) → False)
-```
 
+/- @@@
 It's usually counterintuitive at first that knowing *¬P*
 to be false is not enough to conclude that *P* is true,
 but that's exactly the case in constructive logic.
+@@@ -/
 
+/- @@@
 ## Classical Reasoning
 
 On the other hand, if you want to reason *classically*, to
@@ -120,13 +125,13 @@ axiom has a name and a proposition that is henceforth taken
 to be valid without proof. We hide the defunition inside a
 namespace so as not to *pollute* our reasoning environment
 with an axiom we might or might not want to use.
+@@@ -/
 
-```lean
 namespace myClassical
 
 axiom negElim : ∀ (P : Prop), ¬¬P → P
-```
 
+/- @@@
 That's it. In English this says, "Assume as an axiom,
 without further proof, that for any proposition, *P*,
 if you have a proof of *¬¬P* you can derive a proof of
@@ -137,16 +142,16 @@ the proposition, *True* is valid, not by a direct proof
 *(True.intro)*, by rather by contradition: applying our
 new axiom of negation elimination to a proof that we will
 construct of ¬¬True.
+@@@ -/
 
-```lean
 example : True :=
 negElim -- eliminate double negation obtained by
   True    -- by proving the negation of True to be false (¬¬True)
   (fun (h : ¬True) => (nomatch h)) -- which is what happens here
 -- Note that *P* in our definition is an *argument* to *negElim*
-```
 
 
+/- @@@
 ### The Equivalent Axiom of the Excluded Middle
 
 Another way to enable classical reasoning in Lean is to
@@ -161,14 +166,14 @@ proof of *P* or a proof of *¬P*. One can then reason from
 this proof of a disjunction by case analysis, where you can
 assume a there's a proof of *P* in the first case and there
 is a proof of *¬P* in the second, and only other, case.
+@@@ -/
 
-```lean
 axiom em : ∀ (P : Prop), P ∨ ¬P
-```
 
+/- @@@
 From this axiom we can in fact derive negation elimination.
+@@@ -/
 
-```lean
 example :
   (∀ (P : Prop), (P ∨ ¬P)) →
   (∀ (P : Prop), ¬¬P → P) :=
@@ -187,9 +192,9 @@ fun hEm =>
       )
     )
   )
-```
 
 
+/- @@@
 ```lean
 fun hEm =>
   fun P =>
@@ -198,8 +203,10 @@ fun hEm =>
       | Or.inl _ => by assumption     -- a lean "tactic!"
       | Or.inr _ => by contradiction  -- a lean "tactic!"
 ```
+@@@ -/
 
-If fact it's an equivalence, in that you can prove that
+/- @@@
+In fact it's an equivalence, in that you can prove that
 negation elimination implies excluded middle, as well. You
 can thus add either one as an axiom, derive the other and
 then use either classical reasoning principle as you wish.
@@ -215,7 +222,9 @@ construct a new set with one element from each of the given
 sets. For more information, you might see the [Wikipedia
 article](https://en.wikipedia.org/wiki/Axiom_of_choice)
 on this topic.
+@@@ -/
 
+/- @@@
 ### Demorgan's Law Example: ¬(P ∧ Q) → (¬P ∨ ¬Q)
 
 We've already gotten stuck trying to prove that for
@@ -225,13 +234,13 @@ classical logic by using the axiom of the excluded
 middle. It is available in Lean 4 in the *Classical*
 namespace as *Classical.em*. We'll thus now switch
 to using Lean's standard statement of this axiom.
-```lean
+@@@ -/
 end myClassical
 
 #check Classical.em
 -- Classical.em (p : Prop) : p ∨ ¬p
-```
 
+/- @@@
 The axiom of the excluded middle takes any
 proposition, *P*, for which we might have a
 proof of *P*, or of *¬P*, or *neither,* and it
@@ -246,10 +255,10 @@ we will show that DeMorgan's Law for negation
 over conjunction is true under each of the four
 possible combinations of Boolean truth values
 for *P* and *Q*.
-```lean
+@@@ -/
 example (P Q : Prop) : ¬(P ∧ Q) → ¬P ∨ ¬ Q :=
 fun (h : ¬(P ∧ Q)) =>
-```
+/- @@@
 At this point we're constructively stuck, as
 *h* is just a proof of a function to False and
 there's no way to derive a proof of either ¬P
@@ -261,7 +270,7 @@ we can have free proof of *P ∨ ¬P*, at which
 point we only have two cases to consider. Wd
 do that by case analysis as when reasoning
 from the truth of any disjunction.
-```lean
+@@@ -/
 let pornp : P ∨ ¬P := Classical.em P
 -- TRICK! Do case analysis on *pornp*
 match pornp with
@@ -277,4 +286,3 @@ match pornp with
   | Or.inr nq => Or.inr nq
 -- Case P is false, in which case ¬P ∨ ¬Q is, too
 | Or.inr np => Or.inl np
-```
